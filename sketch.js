@@ -5,11 +5,21 @@ let x = 0;
 let posY = 100
 let dY = 3 
 let estado = 0 //0 será igual a menu, 1 sera el juego y 2: gameOver
+let wallX = []
+let wallY = []
+let pared
+let puntaje = 0
+let puntajeMax = 0
+let recordAnterior = 0
+
  
 function preload() {
   //se carga todo con load y luego que quieres
   imagenFondo = loadImage('./images/fondojuego00.png');
   personaje = loadImage('./images/miku00.gif');
+  imagenInicio = loadImage('./images/inicio.jpg')
+  pared = loadImage('./images/pared.png')
+
 }
  
 function setup() {
@@ -20,7 +30,8 @@ function setup() {
  
 function draw() {
 
-  if(estado == 1){
+  if(estado === 1){
+    imageMode(CORNER)
   background(255)
   image(imagenFondo,x,0);
   image(imagenFondo,x + imagenFondo.width, 0)
@@ -30,14 +41,39 @@ function draw() {
   if(x <= 0 -imagenFondo.width){
     x=0;
   }
+  //Obstaculos
+  for ( let i = 0; i < wallX.length; i++)
+    {
+        imageMode(CENTER)
+        image(pared,wallX[i],wallY[i]-500)
+        image(pared,wallX[i],wallY[i]+500)
+
+        if (wallX[i] < 0)
+        {
+          wallX[i] = width
+          wallY[i] = random(200,300)
+        }
+        
+    //Puntaje
+    if (wallX[i] === 100)
+   {
+      puntaje++
+     puntajeMax = max(puntaje, puntajeMax)
+   }
+   wallX[i] = wallX[i] - 5 //Para que se muevan los obstaculos
+      }
+  //personaje
+  textSize(25)
   image(personaje, 100, posY,60,60);
+  text("Puntaje: " + puntaje, width/2-60,500)
   } 
-  else if (estado == 0)
+  else if (estado === 0)
   {
     cursor()
-    image(imagenFondo,0,0)
+    image(imagenInicio,0,0,1000,600)
     textSize(50)
     fill(255)
+    text("Puntaje Maximo " + puntajeMax, 100,200)
     text("Haga click para comenzar",100,100)
   }
   {
@@ -52,6 +88,13 @@ function mousePressed(){
     posY = 100
     x = 0
     dY = 3
+
+    wallX = [500,800,1100]
+    wallY [0] = random(200,300)
+    wallY [1] = random(200,300)
+    wallY [2] = random(200,300)
+    puntaje = 0
+    recordAnterior = puntajeMax
     noCursor()
   }
   
