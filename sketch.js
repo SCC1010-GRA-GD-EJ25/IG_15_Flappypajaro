@@ -11,15 +11,18 @@ let pared
 let puntaje = 0
 let puntajeMax = 0
 let recordAnterior = 0
+let musicaJuego
+let musicaRecord
 
- 
+
 function preload() {
   //se carga todo con load y luego que quieres
   imagenFondo = loadImage('./images/fondojuego00.png');
   personaje = loadImage('./images/miku00.gif');
   imagenInicio = loadImage('./images/inicio.jpg')
   pared = loadImage('./images/pared.png')
-
+  musicaJuego = loadSound('./sounds/musicafondo.mp3')
+  musicaRecord = loadSound('./sounds/aplauso.wav')
 }
  
 function setup() {
@@ -61,6 +64,13 @@ function draw() {
      puntajeMax = max(puntaje, puntajeMax)
    }
    wallX[i] = wallX[i] - 5 //Para que se muevan los obstaculos
+   if (posY < -60 || posY > height + 60 
+          || (abs(wallX[i] - 100) <  60 
+          && abs(wallY[i] - posY) > 100))
+   {
+    musicaJuego.stop()
+    estado = 0
+   }
       }
   //personaje
   textSize(25)
@@ -69,15 +79,19 @@ function draw() {
   } 
   else if (estado === 0)
   {
+    background(0)
+    imageMode(CORNER)
     cursor()
     image(imagenInicio,0,0,1000,600)
     textSize(50)
     fill(255)
     text("Puntaje Maximo " + puntajeMax, 100,200)
     text("Haga click para comenzar",100,100)
-  }
-  {
-
+    if (puntajeMax > recordAnterior)
+    {
+     if(!musicaRecord.isPlaying())
+      musicaRecord.play()
+    }
   }
 }
 
@@ -96,6 +110,12 @@ function mousePressed(){
     puntaje = 0
     recordAnterior = puntajeMax
     noCursor()
+
+    if (musicaRecord.isPlaying())
+    {
+      musicaRecord.stop()
+    }
+    musicaJuego.loop()
   }
   
   //posY = 100
