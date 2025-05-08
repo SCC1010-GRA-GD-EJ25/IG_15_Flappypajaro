@@ -13,15 +13,16 @@ let puntajeMax = 0
 let recordAnterior = 0
 let musicaJuego
 let musicaRecord
-
+let letra
 
 function preload() {
   //se carga todo con load y luego que quieres
-  imagenFondo = loadImage('./images/fondojuego00.png');
-  personaje = loadImage('./images/miku00.gif');
-  imagenInicio = loadImage('./images/inicio.jpg')
+  letra = loadFont('./font/HARRYP__.TTF')
+  imagenFondo = loadImage('./images/fondoHP.jpg');
+  personaje = loadImage('./images/harrypotter.gif');
+  imagenInicio = loadImage('./images/FondogatoHP.jpg')
   pared = loadImage('./images/pared.png')
-  musicaJuego = loadSound('./sounds/musicafondo.mp3')
+  musicaJuego = loadSound('./sounds/musicHP.mp3')
   musicaRecord = loadSound('./sounds/aplauso.wav')
 }
  
@@ -32,7 +33,7 @@ function setup() {
 }
  
 function draw() {
-
+textFont(letra)
   if(estado === 1){
     imageMode(CORNER)
   background(255)
@@ -45,6 +46,7 @@ function draw() {
     x=0;
   }
   //Obstaculos
+  
   for ( let i = 0; i < wallX.length; i++)
     {
         imageMode(CENTER)
@@ -64,8 +66,8 @@ function draw() {
      puntajeMax = max(puntaje, puntajeMax)
    }
    wallX[i] = wallX[i] - 5 //Para que se muevan los obstaculos
-   if (posY < -60 || posY > height + 60 
-          || (abs(wallX[i] - 100) <  60 
+   if (posY < -80 || posY > height + 80 
+          || (abs(wallX[i] - 100) <  80 
           && abs(wallY[i] - posY) > 100))
    {
     musicaJuego.stop()
@@ -74,8 +76,9 @@ function draw() {
       }
   //personaje
   textSize(25)
-  image(personaje, 100, posY,60,60);
-  text("Puntaje: " + puntaje, width/2-60,500)
+  image(personaje, 100, posY,80,80);
+  fill(0)
+  text("Puntaje: " + puntaje, width/2-80,500)
   } 
   else if (estado === 0)
   {
@@ -84,9 +87,9 @@ function draw() {
     cursor()
     image(imagenInicio,0,0,1000,600)
     textSize(50)
-    fill(255)
-    text("Puntaje Maximo " + puntajeMax, 100,200)
-    text("Haga click para comenzar",100,100)
+    
+    text("Puntaje Maximo: " + puntajeMax, 600,450)
+    text("Haga click para comenzar",600,400)
     if (puntajeMax > recordAnterior)
     {
      if(!musicaRecord.isPlaying())
